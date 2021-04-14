@@ -9,7 +9,7 @@ pd.set_option('max_columns', None)
 
 # Join
 ## 2개의 dataframe을 하나의 dataframe으로 합칠 때 사용 됨
-
+print(":: Join Test...")
 ## 예제 1
 print("\n# example 01")
 left = pd.DataFrame({'A': ['A0', 'A1', 'A2'],
@@ -68,3 +68,60 @@ print(left.join(right, on='key').set_index('key'))
 print("\n>> left.set_index('key').join(right) ")
 print(left.set_index('key').join(right))
 
+
+
+
+
+# Merge
+"""
+ > 인터페이스만 다르지 사실상 같음
+    > join()이 내부적으로 reset_index()와 merge()를 호출
+ > Cartesian product joining
+ > 기본적으로 inner join
+ > concat()과 다르게 index, column 명이 아니라, value 값 자체를 이용한 join
+"""
+print("\n:: Merge Test...")
+left = pd.DataFrame({'key1': ['K0', 'K0', 'K1', 'K2'],
+                     'key2': ['K0', 'K1', 'K0', 'K1'],
+                        'A': ['A0', 'A1', 'A2', 'A3'],
+                        'B': ['B0', 'B1', 'B2', 'B3']})
+    
+right = pd.DataFrame({'key1': ['K0', 'K1', 'K1', 'K2'],
+                               'key2': ['K0', 'K0', 'K0', 'K0'],
+                                  'C': ['C0', 'C1', 'C2', 'C3'],
+                                  'D': ['D0', 'D1', 'D2', 'D3']})
+print("\n>> left")
+print(left)
+
+print("\n>> right")
+print(right)
+
+# default: inner join(교집합)
+print("\n>> pd.merge(left, right, on=['key1', 'key2'])")
+print(pd.merge(left, right, on=['key1', 'key2']))
+
+# outer join(합집합)
+print("\n>> pd.merge(left, right, how='outer', on=['key1', 'key2'])")
+print(pd.merge(left, right, how='outer', on=['key1', 'key2']))
+
+# right가 기준이 되어 join 수행
+print("\n>> pd.merge(left, right, how='right', on=['key1', 'key2'])")
+print(pd.merge(left, right, how='right', on=['key1', 'key2']))
+
+# left가 기준이 되어 join 수행
+print("\n>> pd.merge(left, right, how='left', on=['key1', 'key2'])")
+print(pd.merge(left, right, how='left', on=['key1', 'key2']))
+
+# Cartesian product joining 테스트
+print("\n:: Cartesian product joining")
+left = pd.DataFrame({'A':[1,2,], 'B':[2,2]})
+right = pd.DataFrame({'A':[4,5,6], 'B':[2,2,2]})
+
+print("\n>> left")
+print(left)
+
+print("\n>> right")
+print(right)
+
+print("\n>> pd.merge(left, right, on='B', how='left')")
+print(pd.merge(left, right, on='B', how='left'))
